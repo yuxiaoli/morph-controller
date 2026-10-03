@@ -1,18 +1,22 @@
-name: Deploy GitHub Pages
+name: CI and GitHub Pages
 
-# Publishing remains an explicit action until a repository and branch are chosen.
 on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: github-pages
-  cancel-in-progress: false
+  group: pages-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
+    name: Test and build
     permissions:
       contents: read
       pages: read
@@ -25,12 +29,18 @@ jobs:
           package-manager-cache: false
       - run: npm test
       - run: npm run build
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - name: Configure Pages
+        if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+      - name: Upload site
+        if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
   deploy:
+    # The github-pages environment permits only the develop branch.
+    if: github.ref == 'refs/heads/develop' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:

@@ -16,15 +16,26 @@ Open http://127.0.0.1:4173. The build recreates `dist/`, copies the source files
 
 Only the contents of `dist/` should be published. Its entrypoint is `index.html`, with relative `css/` and `js/` assets; no base-path rewrite is needed for a repository subpath. Rebuild after source changes. Do not edit or commit generated files.
 
-## GitHub Pages
+## CI and GitHub Pages
 
-The repository includes `.github/workflows/pages.yml`, a manually triggered publishing workflow. It runs tests, builds the site, uploads `dist/`, then deploys that artifact to Pages. It uses the official GitHub Pages actions, as described in [GitHub's custom workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+The `.github/workflows/pages.yml` workflow runs `npm test` and `npm run build` for every push to `develop` and every pull request targeting `develop`. Pull requests run validation only. Successful pushes to `develop` upload `dist/` and deploy it to Pages.
 
-When you are ready to choose or create a GitHub repository:
+The `github-pages` environment permits deployments from `develop`. The workflow checks that branch before configuring Pages, uploading its artifact, or deploying, so a manual run on another branch performs validation without attempting a rejected deployment. Tests or build failures prevent deployment.
 
-1. Push the source, documentation, tests, scripts, package manifest, and workflow to the repository's default branch.
-2. Open **Settings → Pages** and select **GitHub Actions** as the publishing source.
-3. Open **Actions → Deploy GitHub Pages → Run workflow** and choose the branch to publish.
-4. Wait for the build and deploy jobs to finish. The deploy job exposes the published site URL through its `github-pages` environment.
+The workflow uses the official GitHub Pages actions, as described in [GitHub's custom workflow documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). **Settings → Pages** should use **GitHub Actions** as its publishing source.
 
-The workflow is manual so publishing can be enabled deliberately once the repository and publishing branch are chosen. The old branch-based `/docs` publishing setup no longer applies.
+## Publish an update
+
+Commit your changes on `develop`, then push them:
+
+```bash
+git push origin develop
+```
+
+To redeploy the latest remote `develop` without another commit:
+
+```bash
+gh workflow run pages.yml --ref develop
+```
+
+To view recent runs, use `gh run list --workflow pages.yml --branch develop` or open **Actions → CI and GitHub Pages**. A successful deploy exposes the site URL through its `github-pages` environment. The old branch-based `/docs` publishing setup no longer applies.

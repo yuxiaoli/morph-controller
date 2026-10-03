@@ -11,7 +11,7 @@
 - `dist/`: Generated static site. Created by `npm run build` and ignored by Git.
 - `scripts/`: Dependency-free Node.js build and local server scripts.
 - `tests/`: Regression tests that import directly from `src/js/`.
-- `.github/workflows/pages.yml`: Manually triggered GitHub Pages deployment of `dist/`.
+- `.github/workflows/pages.yml`: CI for pushes and pull requests to `develop`, plus Pages deployment of successful `develop` builds. Manual dispatch is also supported.
 - `refs/morph.md`: Reference server code; not included in the published site.
 - `README.md`: Development commands and documentation entrypoint.
 - `context/`: Workspace guidance, including PowerShell conventions.

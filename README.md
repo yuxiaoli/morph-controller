@@ -35,10 +35,12 @@ docs/                 Architecture and deployment documentation
 tests/                Regression tests
 scripts/              Local server and static build scripts
 dist/                 Generated site; ignored by Git
-.github/workflows/    GitHub Pages publishing workflow
+.github/workflows/    CI checks and GitHub Pages publishing workflow
 refs/                 Reference server code
 ```
 
 `src/` is the source of truth. `docs/` contains explanatory Markdown documents. `dist/` is generated output: do not edit or commit it.
+
+Pushes and pull requests to `develop` automatically run tests and build the site. Successful pushes to `develop` also deploy GitHub Pages. To redeploy that branch manually, run `gh workflow run pages.yml --ref develop`.
 
 See [Architecture](docs/architecture.md) for module responsibilities and validation, and [Deployment](docs/deployment.md) for local production preview and GitHub Pages setup.
