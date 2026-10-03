@@ -580,14 +580,6 @@ select:hover {
   color: var(--muted);
 }
 
-.controls-button {
-  gap: 8px;
-  min-width: auto;
-  padding: 0 12px;
-  font-size: 0.79rem;
-  font-weight: 650;
-}
-
 .preview-stage {
   position: absolute;
   inset: 0;
@@ -824,9 +816,6 @@ select:hover {
   .topbar {
     padding-right: 10px;
     padding-left: 13px;
-  }
-  .controls-button {
-    padding: 0 9px;
   }
   .footer-actions {
     gap: 0;

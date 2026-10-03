@@ -1,6 +1,6 @@
 # Morph Controller
 
-Responsive static URL Builder and iframe preview for the Vector Index Morph demo.
+Responsive Morph Studio controls and iframe preview for the Vector Index Morph demo.
 
 ## Development
 
