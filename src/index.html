@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#081017" />
+    <meta name="description" content="A responsive URL builder and preview workspace for Vector Index Morph." />
+    <title>Morph Controller · Vector Index</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23081017'/%3E%3Cpath d='M17 42 32 14l15 28h-7l-3-7H27l-3 7zM30 29l-3 7h10l-3-7-2-5z' fill='%2327e6a1'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="control-panel" id="control-panel" aria-label="URL Builder" aria-hidden="false">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Morph / Control</p>
+            <h1>URL Builder</h1>
+          </div>
+          <button class="icon-button panel-close" id="panel-close" type="button" aria-label="Close controls" title="Close controls">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" /></svg>
+          </button>
+        </div>
+
+        <div class="panel-scroll">
+          <form id="builder-form" novalidate>
+            <fieldset>
+              <legend>Parameters</legend>
+
+              <div class="field-group">
+                <label for="particles">Particles <span class="field-hint">n</span></label>
+                <input id="particles" name="n" type="number" inputmode="numeric" min="1" step="1" autocomplete="off" aria-describedby="particles-error" />
+                <p class="field-error" id="particles-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field-group">
+                <label for="shape">Shape <span class="field-hint">current</span></label>
+                <select id="shape" name="current" aria-describedby="shape-error"></select>
+                <p class="field-error" id="shape-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field-group">
+                <label for="delay">Interval <span class="field-hint">delay · ms</span></label>
+                <input id="delay" name="delay" type="number" inputmode="numeric" min="1" step="1" autocomplete="off" aria-describedby="delay-error" />
+                <p class="field-error" id="delay-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field-group toggle-group">
+                <div>
+                  <label for="loop">Cycle shapes <span class="field-hint">loop</span></label>
+                  <p class="field-description">Keep morphing through the shape sequence.</p>
+                  <p class="field-error" id="loop-error" aria-live="polite"></p>
+                </div>
+                <label class="switch" aria-label="Cycle shapes">
+                  <input id="loop" name="loop" type="checkbox" aria-describedby="loop-error" />
+                  <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+                </label>
+              </div>
+
+              <div class="field-group color-group">
+                <label for="background">Background <span class="field-hint">bg</span></label>
+                <div class="color-input-row">
+                  <input id="background" class="color-picker" type="color" aria-label="Choose background color" />
+                  <div class="hex-input-wrap">
+                    <span aria-hidden="true">#</span>
+                    <input id="background-hex" name="bg" type="text" maxlength="6" spellcheck="false" autocomplete="off" aria-label="Background hex color" aria-describedby="background-error" />
+                  </div>
+                </div>
+                <p class="field-error" id="background-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field-group">
+                <label for="pixel">Particle texture <span class="field-hint">pixel</span></label>
+                <select id="pixel" name="pixel" aria-describedby="pixel-error">
+                  <option value="">Default</option>
+                  <option value="ff2b2b">Red · ff2b2b</option>
+                </select>
+                <p class="field-description">Only textures available on the Morph server are listed.</p>
+                <p class="field-error" id="pixel-error" aria-live="polite"></p>
+              </div>
+            </fieldset>
+
+            <div class="auto-apply-row">
+              <div>
+                <span class="field-label">Auto apply</span>
+                <p class="field-description">Apply 800ms after you stop editing.</p>
+              </div>
+              <label class="switch" aria-label="Enable auto apply">
+                <input id="auto-apply" type="checkbox" />
+                <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+              </label>
+            </div>
+          </form>
+
+          <div class="url-output-card">
+            <div class="url-output-header">
+              <span class="field-label">Generated URL</span>
+              <span class="draft-status" id="draft-status">Applied</span>
+            </div>
+            <code id="generated-url" tabindex="0"></code>
+          </div>
+
+          <p class="behavior-note"><span class="note-icon" aria-hidden="true">i</span> Morph starts on Line, then switches to the selected shape after about 5 seconds.</p>
+        </div>
+
+        <div class="panel-actions">
+          <button class="button button-primary" id="apply" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 9.5 17 19 7.5" /></svg>
+            Apply
+          </button>
+          <button class="button button-secondary" id="reset" type="button">Reset</button>
+        </div>
+      </aside>
+
+      <main class="preview-shell" id="preview-shell">
+        <header class="topbar">
+          <div class="brand-lockup">
+            <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div>
+              <span class="brand-name">MORPH</span>
+              <span class="brand-subtitle">Vector Index</span>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <button class="toolbar-button controls-button" id="controls" type="button" aria-expanded="false" aria-controls="control-panel">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16M8 4v4M15 10v4M10 16v4" /></svg>
+              <span>Controls</span>
+            </button>
+            <button class="toolbar-button" id="reload" type="button" title="Reload preview">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0 1 4M20 5v6h-6" /></svg>
+              <span class="sr-only">Reload preview</span>
+            </button>
+            <button class="toolbar-button" id="fullscreen" type="button" title="Enter fullscreen">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4H4v4M16 4h4v4M20 16v4h-4M4 16v4h4" /></svg>
+              <span class="sr-only">Enter fullscreen</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="preview-stage" id="preview-stage">
+          <div class="preview-loading" id="preview-loading" role="status">
+            <span class="loading-pulse" aria-hidden="true"></span>
+            <span id="preview-status">Loading Morph preview…</span>
+          </div>
+          <iframe id="morph-frame" title="Vector Index Morph preview" allow="fullscreen" loading="eager"></iframe>
+        </div>
+
+        <div class="preview-footer">
+          <span id="applied-label"></span>
+          <div class="footer-actions">
+            <button class="text-button" id="copy-url" type="button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2" /><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" /></svg>
+              Copy URL
+            </button>
+            <button class="text-button" id="open-url" type="button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9" /><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" /></svg>
+              Open
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./js/app.js" type="module"></script>
+  </body>
+</html>

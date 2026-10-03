@@ -1,0 +1,14 @@
+{
+  "name": "morph-controller",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/serve.js src",
+    "build": "node scripts/build.js",
+    "preview": "node scripts/serve.js dist",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
